@@ -279,6 +279,18 @@
                     <option value="fish-eyes dynamic lens"> fish-eyes</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="aspect_ratio">Ratio (Tỷ lệ)</label>
+                <select id="aspect_ratio">
+                    <option value="">-- Mặc định --</option>
+                    <option value="--ar 1:1">1:1 (Vuông)</option>
+                    <option value="--ar 16:9">16:9 (Ngang - Video)</option>
+                    <option value="--ar 9:16">9:16 (Dọc - Story)</option>
+                    <option value="--ar 3:2">3:2 (Ngang - Ảnh)</option>
+                    <option value="--ar 2:3">2:3 (Dọc - Ảnh)</option>
+                    <option value="--ar 4:5">4:5 (Dọc - Social)</option>
+                </select>
+            </div>
         </div>
 
         <div class="result-box">
@@ -297,18 +309,28 @@
         const copyBtn = document.getElementById('copyBtn');
 
         function generatePrompt() {
-            const fieldIds = [
+            // Danh sách ID các trường mô tả (phân tách bằng dấu phẩy)
+            const descriptionFieldIds = [
                 'subject_details', 'action_details', 'context_details', 'tone_mood',
                 'photo_type', 'photo_style', 'camera_type',
                 'lighting_type', 'lighting_time', 'lighting_effect',
                 'camera_angle', 'shot_size', 'camera_lens'
             ];
-            const promptParts = fieldIds.map(id => {
+            
+            // Lấy giá trị từ các trường mô tả
+            const descriptionParts = descriptionFieldIds.map(id => {
                 const element = document.getElementById(id);
                 return element.value ? element.value.trim() : '';
-            });
-            
-            const finalPromptString = promptParts.filter(part => part).join(', ');
+            }).filter(part => part); // Lọc bỏ các giá trị rỗng
+
+            const descriptionString = descriptionParts.join(', ');
+
+            // Lấy giá trị của trường Tỷ lệ (Ratio)
+            const ratioValue = document.getElementById('aspect_ratio').value.trim();
+
+            // Kết hợp chuỗi mô tả và tỷ lệ
+            const finalPromptString = [descriptionString, ratioValue].filter(part => part).join(' ');
+
             document.getElementById('finalPrompt').value = finalPromptString;
         }
 
